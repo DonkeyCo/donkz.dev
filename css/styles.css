@@ -1,0 +1,54 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    background-color: #F0EEF0;
+    font-family: 'Raleway', sans-serif;
+}
+
+#home {
+    margin: 0;
+    height: 100vh;
+    width: 100vw;
+    background: rgba(51, 51, 51, .75)
+}
+
+#home .grid_container {
+    display: grid;
+    width: 100vw;
+    height: 100vh;
+    grid-template-rows: 25vh 25vh 25vh 25vh;
+    grid-template-columns: 50vw 50vw;
+    grid-template-areas: "logo ."
+                         "logo title"
+                         "logo subtitle"
+                         "logo .";
+}
+
+#logo_area {
+    grid-area: logo;
+    justify-self: right;
+    align-self: center;
+}
+
+#home_logo {
+    width: 30vw;
+    height: 90vh;
+}
+
+#title_area {
+    align-self: flex-end;
+    justify-self: flex-start;
+    grid-area: title;
+    color: #F0EEF0;
+    font-size: 5em;
+    font-weight: 600;
+}
+
+#subtitle_area {
+    justify-self: self-start;
+    grid-area: subtitle;
+    color: #F0EEF0;
+    grid-area: subtitle;
+    font-size: 1.6em;
+    font-weight: 300;
+}
