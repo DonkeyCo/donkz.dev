@@ -1,33 +1,24 @@
-$(document).ready(function () {
+var contentItems = [];
+var scrollIndex = 0;
+var scroll = 0;
 
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function (e) {
-            e.preventDefault();
+$(document).ready(function() {
+    $("#content").children().each(function() {
+        contentItems.push($(this).attr("id"));
+    })
+})
 
-            $(this).parent().parent().find(".navigationItem").find("a").removeClass("active");
-            $(this).addClass("active");
-            
-            document.querySelector(this.getAttribute('href')).scrollIntoView({
-                behavior: 'smooth'
-            });
-        });
-    });
-
-    $("#btnFinEnce").click(function () {
-        window.location.href = "https://github.com/DonkeyCo/finEnce";
-    });
-
-    $(window).on('mousewheel', function () {
-        $('.target').each(function () {
-            if ($(window).scrollTop() >= $(this).offset().top - $(".header").height()) {
-                var href = $(this).attr('id');
-                $("#navigation .navigationItem a").removeClass("active");
-                $("#navigation .navigationItem a[href='#" + href + "']").addClass("active");
-            }
-        });
-    });
-
-    $("#footer").click(function() {
-        alert("Why'd you click here?");
-    });
-});
+$(window).scroll(function() {
+    scroll = $(document).scrollTop(); 
+    if(scroll < (0.9*$("#projects").position().top) && scroll >= 0) {
+        $("#home_logo").addClass("fade_in_left");
+        $("#title_wrapper").addClass("fade_in_right")
+        $("#home_logo").removeClass("stay");
+        $("#title_wrapper").removeClass("stay");
+    } else {
+        $("#home_logo").removeClass("fade_in_left");
+        $("#title_wrapper").removeClass("fade_in_right");
+        $("#home_logo").addClass("stay");
+        $("#title_wrapper").addClass("stay");
+    }
+})
