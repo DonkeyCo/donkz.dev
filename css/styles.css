@@ -95,7 +95,7 @@ body, html {
 }
 
 .bar_part {
-    position: absolute;
+    float: left;
     background: var(--color);
     width: calc(var(--percentage)/100 * 80vw);
     height: 100%;
