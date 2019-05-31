@@ -4,7 +4,9 @@
   "description": "",
   "main": "\u001b[D\u001b[D",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.17.1",
+    "request": "^2.88.0",
+    "requests": "^0.2.2"
   },
   "devDependencies": {},
   "scripts": {
