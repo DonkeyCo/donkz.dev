@@ -2,12 +2,14 @@ const express = require('express');
 const request = require("request");
 const app = express();
 const server = require('http').createServer(app);
-const port = 8080;
+
+const port = 5000;
+const hostname = "134.255.217.12";
 const config = require("./config.json");
 
-//Start listening to port 8080
-app.listen(8080, function() {
-    console.log("Webserver läuft...")
+//Start listening to port 443
+app.listen(port, hostname, function() {
+    console.log("Webserver laeuft auf Port " + port)
 })
 
 //Root directory
