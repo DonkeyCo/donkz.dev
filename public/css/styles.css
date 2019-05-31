@@ -85,7 +85,6 @@ body, html {
 }
 
 #bar_projects {
-    border: 1px solid #7f7f7f;
     width: 80vw;
     height: 10vh;
     grid-area: p_overview;
@@ -96,10 +95,25 @@ body, html {
 
 .bar_part {
     float: left;
+    display: table;
     background: var(--color);
     width: calc(var(--percentage)/100 * 80vw);
     height: 100%;
     content: '';
+}
+
+.bar_part_text {
+    display: table-cell;
+    vertical-align: middle;
+    font-size: 1.1em;
+    color: #F0EEF0;
+    font-weight: 600;
+    text-align: center;
+}
+
+.bar_part:hover {
+    transform: scale(1.1);
+    cursor: pointer;
 }
 
 .fade_in_left {

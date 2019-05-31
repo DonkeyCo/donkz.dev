@@ -2,12 +2,15 @@ var contentItems = [];
 var scrollIndex = 0;
 var scroll = 0;
 
+var repoLangs = {};
+var repos = [];
+
 $(document).ready(function() {
     $("#content").children().each(function() {
         contentItems.push($(this).attr("id"));
     })
-    var repos = getRepos();
-    var repoLangs = getRepoLanguages(repos);
+    getRepos(repos);
+    getRepoLanguages();
 })
 
 $(window).scroll(function() {
@@ -25,12 +28,10 @@ $(window).scroll(function() {
     }
 })
 
-function getRepos() {
-    var list = [];
+function getRepos(list) {
     $.ajax({
         type: "GET",
         url: "/api/github-repos",
-        async: false,
         contentType: 'application/json',
         success: function(data) {
             for(var i = 0; i < data.length; i++) {
@@ -38,29 +39,52 @@ function getRepos() {
             }
         }
     })
-    return list;
 }
 
-function getRepoLanguages(repos) {
-    var list = [];
-    for(var i = 0; i < repos.length; i++) {
-        $.ajax({
-            type: "GET",
-            url: "/api/github-repo-lang",
-            contentType: 'application/json',
-            data: {
-                name: repos[i]
-            },
-            success: function(data) {
-                var keys = Object.keys(data);
-                for(var j = 0; j < keys.length; j++) {
-                    if(list.indexOf(keys[j]) > -1) {
-                        list[keys[j]].push(repos[i]);
-                    } else {
-                        list[keys[j]] = [repos[i]]
-                    }
-                }
-            }
-        })
+function getRepoLanguages() {
+    $.ajax({
+        type: "GET",
+        url: "/api/github-repos-lang",
+        contentType: 'application/json',
+        success: function(data) {
+            
+            createRepoGraphic(data["repo_count"], data["repos"]);
+        }
+    })
+}
+
+function createRepoGraphic(repoCount, repoLangs) {
+    var colors = ["#C0392B", "#5B2C6F", "#2980B9", "#48C9B0", "#1E8449", "#F1C40F", "#F39C12", "#BA4A00", "#283747"];
+    var langCount = getRepoLangCount(repoLangs);
+    var sortedRepos = sortRepo(repoLangs);
+    for(var counter in sortedRepos) {
+        var randColor = colors[counter];
+        var percentage = (sortedRepos[counter][1].length/langCount) * 100;
+        console.log(percentage);
+        var divTag = `<div class="bar_part" style="--color:${randColor}; --percentage:${percentage};"><div class="bar_part_text">${sortedRepos[counter][0]}</div></div>`
+        $("#bar_projects").append(divTag); 
+        console.log(divTag); 
     }
+}
+
+function getRepoLangCount(repoLangs) {
+    var counter = 0;
+    for(var key in repoLangs) {
+        counter += repoLangs[key].length;
+    }
+    console.log(counter);
+    return counter;
+}
+
+function sortRepo(repoLangs) {
+    var sortable = [];
+    for(var key in repoLangs) {
+        if(repoLangs.hasOwnProperty(key)) {
+            sortable.push([key, repoLangs[key]]);
+        }
+    }
+    sortable.sort(function(a,b) {
+        return b[1].length - a[1].length;
+    })
+    return sortable;
 }
