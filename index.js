@@ -17,7 +17,7 @@ app.use(express.static(__dirname + "/public"))
 
 //Create a header to authenticate to Github API
 const header = {
-    "User-Agent": "DonkeyCo",
+    "User-Agent": config["production"]["user_agent"],
     "Authorization": "token " + config["production"]["github"]
 }
 
