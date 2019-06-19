@@ -4,7 +4,7 @@ const app = express();
 const server = require('http').createServer(app);
 
 const port = 5000;
-const hostname = "134.255.217.12";
+const hostname = "localhost" /*"134.255.217.12"*/;
 const config = require("./config.json");
 
 //Start listening to port 443

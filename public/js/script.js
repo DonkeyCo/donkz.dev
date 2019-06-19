@@ -11,6 +11,12 @@ $(document).ready(function() {
     })
     getRepos(repos);
     getRepoLanguages();
+
+    $("body").on("click", ".bar_part", function(event) {
+        var id = $(this).attr("id");
+        var l = findRepos(id, repoLangs);
+        createDetailGraphic(l);
+    });
 })
 
 $(window).scroll(function() {
@@ -47,23 +53,20 @@ function getRepoLanguages() {
         url: "/api/github-repos-lang",
         contentType: 'application/json',
         success: function(data) {
-            
             createRepoGraphic(data["repo_count"], data["repos"]);
         }
     })
 }
 
-function createRepoGraphic(repoCount, repoLangs) {
-    var colors = ["#C0392B", "#5B2C6F", "#2980B9", "#48C9B0", "#1E8449", "#F1C40F", "#F39C12", "#BA4A00", "#283747"];
-    var langCount = getRepoLangCount(repoLangs);
-    var sortedRepos = sortRepo(repoLangs);
-    for(var counter in sortedRepos) {
-        var randColor = colors[counter];
-        var percentage = (sortedRepos[counter][1].length/langCount) * 100;
-        console.log(percentage);
-        var divTag = `<div class="bar_part" style="--color:${randColor}; --percentage:${percentage};"><div class="bar_part_text">${sortedRepos[counter][0]}</div></div>`
+function createRepoGraphic(repoCount, repos) {
+    var langCount = getRepoLangCount(repos);
+    repoLangs = sortRepo(repos);
+    console.log(repoLangs);
+    for(var counter in repoLangs) {
+        color = getColor();
+        var percentage = (repoLangs[counter][1].length/langCount) * 100;
+        var divTag = `<div id="${repoLangs[counter][0]}" class="bar_part" style="--color:${color}; --percentage:${percentage};"><span class="bar_part_text">${repoLangs[counter][0]}</span></div>`
         $("#bar_projects").append(divTag); 
-        console.log(divTag); 
     }
 }
 
@@ -72,7 +75,6 @@ function getRepoLangCount(repoLangs) {
     for(var key in repoLangs) {
         counter += repoLangs[key].length;
     }
-    console.log(counter);
     return counter;
 }
 
@@ -87,4 +89,52 @@ function sortRepo(repoLangs) {
         return b[1].length - a[1].length;
     })
     return sortable;
+}
+
+function findRepos(lang, l) {
+    for(var it in l) {
+        if(l[it][0].toLocaleLowerCase().localeCompare(lang.toLocaleLowerCase()) == 0) {
+            return l[it][1];
+        }
+    }
+}
+
+function createDetailGraphic(list) {
+    var percentage = 1/list.length * 100;
+    $("#bar_details").empty();
+    for(var i in list) {
+        color = getColor();
+        var divTag = `<div id="${list[i]}" class="bar_details_part" style="--color:${color}; --percentage:${percentage};"><span class="bar_part_text">${list[i]}</span></div>`;
+        $("#bar_details").addClass("fold_l_r");
+        $("#bar_details").append(divTag);
+        $("body").on('animationend webkitAnimationEnd oAnimationEnd', '#bar_details', function(e) {
+            $("#bar_details").removeClass("fold_l_r");
+        });
+    }
+}
+
+function getColor() {
+    var hex = Math.floor(Math.random()*16777215).toString(16);
+    var color = ('000000' + hex).slice(-6);
+    color = ColorLuminance(hex, -0.15);
+    return color;
+}
+
+function ColorLuminance(hex, lum) {
+	// validate hex string
+	hex = String(hex).replace(/[^0-9a-f]/gi, '');
+	if (hex.length < 6) {
+		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
+	}
+	lum = lum || 0;
+
+	// convert to decimal and change luminosity
+	var rgb = "#", c, i;
+	for (i = 0; i < 3; i++) {
+		c = parseInt(hex.substr(i*2,2), 16);
+		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
+		rgb += ("00"+c).substr(c.length);
+	}
+
+	return rgb;
 }

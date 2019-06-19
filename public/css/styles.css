@@ -77,10 +77,11 @@ body, html {
     display: grid;
     height: 100vh;
     width: 100vw;
-    grid-template-rows: 40vh 20vh 40vh;
+    grid-template-rows: 30vh 20vh 20vh 30vh;
     grid-template-columns: 10vw 80vw 10vw;
     grid-template-areas: ". . ."
                          ". p_overview ."
+                         ". p_details ."
                          ". . .";
 }
 
@@ -88,9 +89,10 @@ body, html {
     width: 80vw;
     height: 10vh;
     grid-area: p_overview;
-    justify-self: center;
-    align-self: center;
+    justify-self: baseline;
+    align-self: flex-end;
     position: relative;
+    z-index: 1;
 }
 
 .bar_part {
@@ -112,8 +114,30 @@ body, html {
 }
 
 .bar_part:hover {
-    transform: scale(1.1);
     cursor: pointer;
+    filter: brightness(90%);
+}
+
+#bar_details {
+    width: 80vw;
+    height: 10vh;
+    grid-area: p_details;
+    justify-self: flex-start;
+    align-self: flex-start;
+}
+
+.fold_l_r {
+    animation: fold_l_r 0.5s;
+}
+
+.bar_details_part {
+    float: left;
+    display: table;
+    background: var(--color);
+    width: calc(var(--percentage)/100 * 80vw);
+    --w: calc(var(--percentage)/100 * 80vw);
+    height: 100%;
+    content: '';
 }
 
 .fade_in_left {
@@ -147,5 +171,29 @@ body, html {
     100% {
         transform: translateX(0);
         opacity: 1;
+    }
+}
+
+@keyframes top_fade_in {
+    0% {
+        transform: translateY(-50%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fold_l_r {
+    0% {
+        transform: scaleX(0); 
+        transform-origin:left center;
+        overflow: hidden;
+    }
+    100% {
+        transform: scaleX(100%);
+        transform-origin:left center;
+        overflow: auto;
     }
 }
